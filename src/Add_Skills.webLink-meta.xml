@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Add_Skills</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Add Skills</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>{!REQUIRESCRIPT("/soap/ajax/23.0/connection.js")}
+{!REQUIRESCRIPT("/soap/ajax/23.0/apex.js")}
+
+var records = {!GETRECORDIDS($ObjectType.Contact)};
+if (records.length &gt; 0) {
+var idList = records.join(&#39;~&#39;);
+var resultItem = new sforce.SObject("ts2__s_ResultItem__c");
+if (resultItem) {
+resultItem.ts2__sel_contact_id_list__c = idList;
+var createRiResult = sforce.connection.create([resultItem]);
+if (createRiResult &amp;&amp; createRiResult[0].getBoolean("success")) {
+var resultId = createRiResult[0].id;
+var url = "/apex/ts2__add_skills_temp?cId=" + resultId + &#39;&amp;src=resultitem&#39;;
+var features = &#39;directories=no,menubar=no,titlebar=no,toolbar=no,width=900,height=590&#39;;
+win = window.open(url,&#39;&#39;, features);
+win.focus();
+}
+}
+}
+else {
+alert(&#39;You must select at least 1 Candidate.&#39;);
+}</url>
+</WebLink>
